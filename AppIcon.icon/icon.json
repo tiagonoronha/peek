@@ -1,0 +1,34 @@
+{
+  "fill" : "automatic",
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "srgb:0.00000,0.53333,1.00000,1.00000"
+          },
+          "image-name" : "logo-house-eyes.png",
+          "name" : "logo-house-eyes",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              -20.9453125
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : "shared"
+  }
+}

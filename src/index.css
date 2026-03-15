@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+/* Dark theme tokens */
+@theme {
+  /* Backgrounds - Tailwind neutral scale */
+  --color-bg: #171717;           /* neutral-900 */
+  --color-bg-muted: #1c1c1c;     /* between 900/800 */
+  --color-bg-panel: #262626;     /* neutral-800 */
+  --color-bg-emphasized: #525252; /* neutral-600 - improved contrast */
+
+  /* Foreground */
+  --color-fg: #ffffff;           /* white */
+  --color-fg-muted: #a3a3a3;     /* neutral-400 - 4.6:1 contrast on bg */
+
+  /* Borders - improved for 3:1+ contrast on bg-panel */
+  --color-border: #525252;       /* neutral-600 - ~2.5:1 on #262626 */
+  --color-border-subtle: #3f3f46; /* zinc-700 - subtle but visible */
+
+  /* Accent */
+  --color-accent: #3b82f6;       /* blue-500 */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  @apply bg-bg text-fg;
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Peek",
+  "version": "1.0.0",
+  "identifier": "com.peek",
+  "build": {
+    "beforeDevCommand": "vite",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "vite build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Peek Preferences",
+        "width": 850,
+        "height": 650,
+        "minWidth": 800,
+        "visible": false,
+        "backgroundThrottling": "disabled"
+      }
+    ],
+    "trayIcon": {
+      "id": "peek-icon",
+      "iconPath": "icons/tray.png",
+      "iconAsTemplate": true
+    },
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; connect-src 'self' wss://* https://*; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["app", "dmg"],
+    "createUpdaterArtifacts": true,
+    "macOS": {
+      "signingIdentity": "Developer ID Application: Paginas Voadoras Lda (ALSAUB8379)",
+      "minimumSystemVersion": "11.0",
+      "files": {
+        "Resources/Assets.car": "resources/Assets.car"
+      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDc2NkVGMkFDODU5NzI5RDgKUldUWUtaZUZyUEp1ZG5NTWx6TTBXWjBNVWM3Q2hGc3VYc0lxRGRic2pKWGpWUEx4RE1BeFlkNCsK",
+      "endpoints": [
+        "https://github.com/tiagonoronha/peek/releases/latest/download/latest.json"
+      ]
+    }
+  }
+}
