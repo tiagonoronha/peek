@@ -286,8 +286,13 @@ export async function connect(url: string, token: string): Promise<void> {
     // Create auth with long-lived token
     const auth = createLongLivedTokenAuth(normalizedUrl, token);
 
-    // Create connection
-    state.connection = await createConnection({ auth });
+    // Create connection with timeout to avoid hanging when server is unreachable
+    state.connection = await Promise.race([
+      createConnection({ auth }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Connection timed out")), TIMING.CONNECTION_TIMEOUT_MS)
+      ),
+    ]);
     log("Connected, HA version:", state.connection.haVersion);
 
     setupConnectionListeners(state.connection);
