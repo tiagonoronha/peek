@@ -73,6 +73,13 @@ export function normalizeConnectionError(
   if (str.includes("timeout") || str.includes("timed out")) {
     return "Connection timed out. The server may be unreachable.";
   }
+  if (
+    str.includes("cleartext") ||
+    str.includes("app transport security") ||
+    str.includes("insecure load")
+  ) {
+    return "Cleartext HTTP blocked by macOS App Transport Security. Use https:// or a local network address (e.g., .local, localhost, or LAN IP).";
+  }
 
   return typeof errCode === "string" ? errCode : `Connection error: ${errCode}`;
 }
