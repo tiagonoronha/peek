@@ -79,7 +79,7 @@ export function normalizeConnectionError(
     str.includes("ats") ||
     str.includes("insecure load")
   ) {
-    return "Cleartext HTTP blocked by macOS App Transport Security. Use https:// or a .local address.";
+    return "Cleartext HTTP blocked by macOS App Transport Security. Use https:// or a local network address (e.g., .local, localhost, or LAN IP).";
   }
 
   return typeof errCode === "string" ? errCode : `Connection error: ${errCode}`;
