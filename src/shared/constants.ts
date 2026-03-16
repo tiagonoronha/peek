@@ -13,6 +13,8 @@ export const TIMING = {
   WAKE_CHECK_INTERVAL_MS: 15000,
   /** Grace period added to wake check interval to detect sleep gaps */
   WAKE_THRESHOLD_GRACE_MS: 5000,
+  /** Timeout for initial WebSocket connection attempts */
+  CONNECTION_TIMEOUT_MS: 10000,
 } as const;
 
 /**

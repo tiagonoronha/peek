@@ -282,19 +282,26 @@ export async function connect(url: string, token: string): Promise<void> {
   const normalizedUrl = normalizeUrl(url.trim(), { defaultProtocol: "https" });
   log("Connecting to", normalizedUrl);
 
+  // Store credentials early so reconnect is available if connection fails
+  state.credentials = { url: normalizedUrl, token };
+
   try {
     // Create auth with long-lived token
     const auth = createLongLivedTokenAuth(normalizedUrl, token);
 
-    // Create connection
-    state.connection = await createConnection({ auth });
+    // Create connection with timeout to avoid hanging when server is unreachable
+    state.connection = await Promise.race([
+      createConnection({ auth }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Connection timed out")), TIMING.CONNECTION_TIMEOUT_MS)
+      ),
+    ]);
     log("Connected, HA version:", state.connection.haVersion);
 
     setupConnectionListeners(state.connection);
     setupEntitySubscription(state.connection);
 
-    // Store credentials for wake reconnection and start wake detection
-    state.credentials = { url: normalizedUrl, token };
+    // Start wake detection for automatic reconnection after sleep
     startWakeDetection();
 
     setStatus("connected");
@@ -304,6 +311,7 @@ export async function connect(url: string, token: string): Promise<void> {
     logError("Connection failed:", errMsg);
 
     if (errCode === ERR_INVALID_AUTH) {
+      state.credentials = null;
       setStatus("auth_invalid", errMsg);
     } else {
       setStatus("disconnected", errMsg);
