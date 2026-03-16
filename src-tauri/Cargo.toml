@@ -1,6 +1,6 @@
 [package]
 name = "peek"
-version = "1.0.0"
+version = "1.0.1"
 description = "A macOS menu bar app for monitoring Home Assistant sensors"
 authors = ["you"]
 edition = "2021"
