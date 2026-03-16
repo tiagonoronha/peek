@@ -27,7 +27,7 @@
       "iconAsTemplate": true
     },
     "security": {
-      "csp": "default-src 'self'; script-src 'self'; connect-src 'self' wss://* https://*; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
+      "csp": "default-src 'self'; script-src 'self'; connect-src 'self' wss://* ws://* https://* http://*; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
     }
   },
   "bundle": {
