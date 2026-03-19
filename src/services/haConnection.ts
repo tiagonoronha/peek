@@ -11,12 +11,35 @@ import {
   subscribeEntities,
   Connection,
   HassEntities,
+  ERR_CANNOT_CONNECT,
   ERR_INVALID_AUTH,
+  ERR_CONNECTION_LOST,
+  ERR_HASS_HOST_REQUIRED,
+  ERR_INVALID_HTTPS_TO_HTTP,
+  ERR_INVALID_AUTH_CALLBACK,
 } from "home-assistant-js-websocket";
 import mitt, { type Emitter } from "mitt";
 import normalizeUrl from "normalize-url";
 import pRetry from "p-retry";
-import { TIMING, WAKE_RETRY_DELAYS, normalizeConnectionError, hasErrorCode, createLogger, type HaEntityState, type HaConnectionStatus } from "@/shared";
+import { TIMING, WAKE_RETRY_DELAYS, createLogger, type HaEntityState, type HaConnectionStatus } from "@/shared";
+
+/** Timeout error code (outside library's 1–6 range) */
+const ERR_TIMEOUT = -1;
+
+/** Maps HA WS error codes → user-facing messages */
+const CONNECTION_ERRORS: Record<number, string> = {
+  [ERR_CANNOT_CONNECT]: "Cannot connect to Home Assistant. Check URL and network.",
+  [ERR_INVALID_AUTH]: "Invalid access token. Check your long-lived token.",
+  [ERR_CONNECTION_LOST]: "Connection lost. Reconnecting...",
+  [ERR_HASS_HOST_REQUIRED]: "Home Assistant URL is required.",
+  [ERR_INVALID_HTTPS_TO_HTTP]: "Cannot connect: HTTPS to HTTP downgrade is not allowed.",
+  [ERR_INVALID_AUTH_CALLBACK]: "Authentication callback is invalid.",
+  [ERR_TIMEOUT]: "Connection timed out. The server may be unreachable.",
+};
+
+function connectionErrorMessage(code: number): string {
+  return CONNECTION_ERRORS[code] ?? `Connection error (${code})`;
+}
 
 const logger = createLogger("[HA WS]");
 const log = logger.info;
@@ -293,7 +316,7 @@ export async function connect(url: string, token: string): Promise<void> {
     state.connection = await Promise.race([
       createConnection({ auth }),
       new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Connection timed out")), TIMING.CONNECTION_TIMEOUT_MS)
+        setTimeout(() => reject(ERR_TIMEOUT), TIMING.CONNECTION_TIMEOUT_MS)
       ),
     ]);
     log("Connected, HA version:", state.connection.haVersion);
@@ -306,8 +329,8 @@ export async function connect(url: string, token: string): Promise<void> {
 
     setStatus("connected");
   } catch (err) {
-    const errCode = hasErrorCode(err) ? err.code : undefined;
-    const errMsg = normalizeConnectionError(errCode ?? err);
+    const errCode = typeof err === "number" ? err : undefined;
+    const errMsg = connectionErrorMessage(errCode ?? 0);
     logError("Connection failed:", errMsg);
 
     if (errCode === ERR_INVALID_AUTH) {

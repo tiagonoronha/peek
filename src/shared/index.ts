@@ -6,4 +6,3 @@ export * from './cn';
 export * from './sensorListUtils';
 export * from './logger';
 export * from './sensorDisplay';
-export * from './errorNormalization';
