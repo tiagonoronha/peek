@@ -13,5 +13,13 @@
       <key>NSAllowsLocalNetworking</key>
       <true/>
     </dict>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Peek needs local network access to connect to Home Assistant instances on your LAN.</string>
+    <key>NSBonjourServices</key>
+    <array>
+      <string>_http._tcp</string>
+      <string>_https._tcp</string>
+      <string>_home-assistant._tcp</string>
+    </array>
   </dict>
 </plist>

@@ -9,12 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
-- Switch from `NSAllowsLocalNetworking` to `NSAllowsArbitraryLoads` to allow connections over plain HTTP on any network.
 - Refactor connection error handling and inline error-code lookup into `haConnection.ts`.
+
+### Added
+
+- `NSLocalNetworkUsageDescription` and Bonjour service declarations for macOS local network permission prompt.
 
 ### Fixed
 
 - `ERR_INVALID_AUTH` now correctly triggers `auth_invalid` status (HA WS library rejects with plain numbers, not Error objects).
+- CSP `connect-src` now includes port wildcards and IPC schemes, fixing WebSocket connections to local/IP addresses with explicit ports.
 
 ## [1.0.1] - 2026-03-16
 
@@ -31,6 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - Initial release.
 
-[1.0.3]: https://github.com/tiagonoronha/peek/compare/v1.0.1...v1.0.3
+[1.0.2]: https://github.com/tiagonoronha/peek/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/tiagonoronha/peek/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/tiagonoronha/peek/releases/tag/v1.0.0
