@@ -9,12 +9,16 @@ import type { Settings } from './types';
  * Timing constants for connection management.
  */
 export const TIMING = {
-  /** Interval for wake-from-sleep detection */
+  /** Interval of the connection watchdog (heartbeat ping + wake-from-sleep detection) */
   WAKE_CHECK_INTERVAL_MS: 15000,
-  /** Grace period added to wake check interval to detect sleep gaps */
+  /** Grace period added to the watchdog interval to detect sleep gaps */
   WAKE_THRESHOLD_GRACE_MS: 5000,
-  /** Timeout for initial WebSocket connection attempts */
+  /** Timeout for WebSocket connection attempts */
   CONNECTION_TIMEOUT_MS: 10000,
+  /** Send a heartbeat ping when no message has been received for this long */
+  HEARTBEAT_IDLE_MS: 30000,
+  /** Treat the socket as dead when a heartbeat ping isn't answered in time */
+  HEARTBEAT_TIMEOUT_MS: 10000,
 } as const;
 
 /**
@@ -26,10 +30,10 @@ export const UI_LIMITS = {
 } as const;
 
 /**
- * Retry delays in milliseconds for wake-from-sleep reconnection.
- * Uses exponential backoff: 1s, 2s, 4s, 8s, 15s.
+ * Backoff delays in milliseconds between automatic reconnection attempts.
+ * The last value is reused indefinitely, so reconnection never gives up.
  */
-export const WAKE_RETRY_DELAYS = [1000, 2000, 4000, 8000, 15000] as const;
+export const RECONNECT_DELAYS = [1000, 2000, 5000, 10000, 30000, 60000] as const;
 
 /**
  * Default application settings for new installations.
