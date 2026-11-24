@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- Automatic reconnection no longer gives up. Failed attempts are retried indefinitely with backoff, and the app reconnects right away after wake from sleep or when the network comes back.
+- Silently dead connections, for example after the Mac was locked or idle, are now detected with a heartbeat ping and re-established.
+
 ## [1.1.0] - 2026-04-15
 
 ### Added
